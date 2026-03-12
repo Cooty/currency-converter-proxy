@@ -1,8 +1,10 @@
 import { Hono } from "hono/tiny";
 
-import { apiClient } from "./api-client.js";
+import { getApiClient } from "./api-client.js";
 
-const app = new Hono();
+import type { Bindings } from "./types/bindings.js";
+
+const app = new Hono<{ Bindings: Bindings }>();
 
 app.get("/", async (c) => {
   const base = c.req.query("base_currency");
@@ -27,6 +29,7 @@ app.get("/", async (c) => {
   }
 
   try {
+    const apiClient = getApiClient(c.env.API_KEY);
     const resp = await apiClient.latest({ base_currency: base, currencies });
     return c.json(resp);
   } catch (e) {

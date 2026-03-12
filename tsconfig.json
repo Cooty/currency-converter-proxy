@@ -5,10 +5,13 @@
     "strict": true,
     "verbatimModuleSyntax": true,
     "skipLibCheck": true,
-    "types": ["node"],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "types": [
+      "./src/types/freecurrencyapi-js.d.ts",
+      "./src/types/cloudflare-rate-limit.d.ts"
+    ]
   },
   "exclude": ["node_modules"],
   "include": ["src"]
