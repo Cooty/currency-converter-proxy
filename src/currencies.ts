@@ -2,9 +2,7 @@ import { Hono } from "hono/tiny";
 
 import { getApiClient } from "./api-client.js";
 
-import type { Bindings } from "./types/bindings.js";
-
-const app = new Hono<{ Bindings: Bindings }>();
+const app = new Hono<{ Bindings: Env }>();
 
 app.get("/", async (c) => {
   try {
