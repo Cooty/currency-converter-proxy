@@ -17,6 +17,6 @@ app.use(
   }),
 );
 
-app.route("api/", api);
+app.route("api/v1/", api);
 
 export default app;

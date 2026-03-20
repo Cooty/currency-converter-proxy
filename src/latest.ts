@@ -1,6 +1,11 @@
 import { Hono } from "hono/tiny";
 
 import { getApiClient } from "./api-client.js";
+import { currencyCodes } from "./data/currency-codes.js";
+
+function isValidCurrencyCode(code: string) {
+  return currencyCodes.includes(code);
+}
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -21,6 +26,24 @@ app.get("/", async (c) => {
     return c.json(
       {
         message: `The following required parameter${moreMissingParams ? "s" : ""} ${moreMissingParams ? "are" : "is"} missing: ${missingParams.join(", ")}`,
+      },
+      400,
+    );
+  }
+
+  if (base === undefined || currencies === undefined) {
+    return c.json(
+      {
+        message: "Invalid parameters!",
+      },
+      400,
+    );
+  }
+
+  if (!isValidCurrencyCode(base) || !isValidCurrencyCode(currencies)) {
+    return c.json(
+      {
+        message: "Invalid parameters!",
       },
       400,
     );
