@@ -9,7 +9,7 @@
     "jsxImportSource": "hono/jsx",
     "outDir": "./dist",
     "types": [
-      "./src/types/freecurrencyapi-js.d.ts",
+      "./src/lib/freecurrencyapi/types/freecurrencyapi-js.d.ts",
       "./worker-configuration.d.ts"
     ]
   },

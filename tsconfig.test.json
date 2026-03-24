@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "verbatimModuleSyntax": false,
+    "types": [
+      "jest",
+      "node",
+      "./src/types/freecurrencyapi-js.d.ts",
+      "./worker-configuration.d.ts"
+    ]
+  },
+  "include": ["src/**/*.ts"]
+}

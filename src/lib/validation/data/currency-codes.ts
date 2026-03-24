@@ -31,5 +31,5 @@ export const currencyCodes = [
   "PHP",
   "SGD",
   "THB",
-  "ZAR",
-];
+  "ZAR"
+]
