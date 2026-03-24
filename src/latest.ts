@@ -17,6 +17,9 @@ app.get("/", async (c) => {
     const requiredParams = { base_currency: base, currencies }
     const missingParams = getMissingParams(requiredParams)
     const moreMissingParams = missingParams.length > 1
+    console.warn(
+      `[warn] /latest handler called with invalid params: base_currency ${base}, currencies: ${currencies}`
+    )
     return c.json(
       {
         message: `The following required parameter${moreMissingParams ? "s" : ""} ${moreMissingParams ? "are" : "is"} missing: ${missingParams.join(", ")}`
@@ -26,6 +29,9 @@ app.get("/", async (c) => {
   }
 
   if (!isValidCurrencyCode(base) || !isValidCurrencyCode(currencies)) {
+    console.warn(
+      `[warn] /latest handler called with invalid params: base_currency ${base}, currencies: ${currencies}`
+    )
     return c.json(
       {
         message: "Invalid parameters!"
@@ -39,7 +45,7 @@ app.get("/", async (c) => {
     const resp = await apiClient.latest({ base_currency: base, currencies })
     return c.json(resp)
   } catch (e) {
-    console.error(e)
+    console.error("[error] /latest: ", e)
     const message = e instanceof Error ? e.message : "Internal Server Error"
     return c.json({ message }, 500)
   }

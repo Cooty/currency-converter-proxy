@@ -10,7 +10,7 @@ app.get("/", async (c) => {
     const resp = await apiClient.currencies()
     return c.json(resp)
   } catch (e) {
-    console.error(e)
+    console.error("[error] /currencies: ", e)
     const message = e instanceof Error ? e.message : "Internal Server Error"
     return c.json({ message }, 500)
   }

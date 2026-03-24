@@ -13,11 +13,17 @@ export const verifyHmac = createMiddleware<{ Bindings: Env }>(
     const providedSignature = c.req.header("x-signature")
 
     if (!timestamp || !providedSignature) {
+      console.error(
+        `[error] ${c.req.url}, Missing headers: ${JSON.stringify(c.req.header)}`
+      )
       return c.json({ message: "Missing signature headers" }, 401)
     }
 
     const timeStampAsNumber = Number(timestamp)
     if (!Number.isFinite(timeStampAsNumber)) {
+      console.error(
+        `[error] ${c.req.url}, Invalid timestamp: ${JSON.stringify(c.req.header)}`
+      )
       return c.json({ message: "Invalid timestamp" }, 401)
     }
 
@@ -27,6 +33,9 @@ export const verifyHmac = createMiddleware<{ Bindings: Env }>(
     const MAX_CLOCK_SKEW_SECONDS = 300 // 5 minutes
 
     if (Math.abs(now - timeStampAsNumber) > MAX_CLOCK_SKEW_SECONDS) {
+      console.error(
+        `[error] ${c.req.url}, Expired timestamp: ${JSON.stringify(c.req.header)}`
+      )
       return c.json({ message: "Expired timestamp" }, 401)
     }
 
@@ -45,6 +54,9 @@ export const verifyHmac = createMiddleware<{ Bindings: Env }>(
     )
 
     if (!timingSafeEqual(providedSignature, expectedSignature)) {
+      console.error(
+        `[error] ${c.req.url}, Invalid signature: ${JSON.stringify(c.req.header)}`
+      )
       return c.json({ message: "Invalid signature" }, 401)
     }
 
