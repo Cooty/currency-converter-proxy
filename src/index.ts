@@ -20,6 +20,20 @@ app.use(
   })
 )
 
+app.use("*", async (c, next) => {
+  console.log(
+    JSON.stringify({
+      method: c.req.method,
+      url: c.req.url,
+      userAgent: c.req.header("user-agent") ?? "unknown",
+      connectingIP: c.req.header("cf-connecting-ip") ?? "unknown",
+      clientVersion: c.req.header("x-client-version") ?? "unknown",
+      clientPlatform: c.req.header("x-client-platform") ?? "unknown"
+    })
+  )
+  await next()
+})
+
 app.use("/api/v1/*", verifyHmac)
 
 app.route("/api/v1", api)
