@@ -7,23 +7,21 @@ import {
 } from "../lib/signing/index.js"
 import { timingSafeEqual } from "../lib/crypto/time-safe-equal.js"
 
+import { logRequest } from "../utils/logging.js"
+
 export const verifyHmac = createMiddleware<{ Bindings: Env }>(
   async (c, next) => {
     const timestamp = c.req.header("x-timestamp")
     const providedSignature = c.req.header("x-signature")
 
     if (!timestamp || !providedSignature) {
-      console.error(
-        `[error] ${c.req.url}, Missing headers: ${JSON.stringify(c.req.header)}`
-      )
+      logRequest("Missing headers", c.req)
       return c.json({ message: "Missing signature headers" }, 401)
     }
 
     const timeStampAsNumber = Number(timestamp)
     if (!Number.isFinite(timeStampAsNumber)) {
-      console.error(
-        `[error] ${c.req.url}, Invalid timestamp: ${JSON.stringify(c.req.header)}`
-      )
+      logRequest("Invalid timestamp", c.req)
       return c.json({ message: "Invalid timestamp" }, 401)
     }
 
@@ -33,9 +31,7 @@ export const verifyHmac = createMiddleware<{ Bindings: Env }>(
     const MAX_CLOCK_SKEW_SECONDS = 300 // 5 minutes
 
     if (Math.abs(now - timeStampAsNumber) > MAX_CLOCK_SKEW_SECONDS) {
-      console.error(
-        `[error] ${c.req.url}, Expired timestamp: ${JSON.stringify(c.req.header)}`
-      )
+      logRequest("Expired timestamp", c.req)
       return c.json({ message: "Expired timestamp" }, 401)
     }
 
@@ -54,9 +50,7 @@ export const verifyHmac = createMiddleware<{ Bindings: Env }>(
     )
 
     if (!timingSafeEqual(providedSignature, expectedSignature)) {
-      console.error(
-        `[error] ${c.req.url}, Invalid signature: ${JSON.stringify(c.req.header)}`
-      )
+      logRequest("Invalid signature", c.req)
       return c.json({ message: "Invalid signature" }, 401)
     }
 
