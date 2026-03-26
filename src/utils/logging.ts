@@ -14,6 +14,18 @@ function serializeError(e: unknown) {
   }
 }
 
+function getHeaders(req: HonoRequest) {
+  const headers = req.raw.headers
+
+  return {
+    contentType: headers.get("content-type"),
+    userAgent: req.header("user-agent") ?? "unknown",
+    connectingIP: req.header("cf-connecting-ip") ?? "unknown",
+    clientVersion: req.header("x-client-version") ?? "unknown",
+    clientPlatform: req.header("x-client-platform") ?? "unknown"
+  }
+}
+
 export function logException(e: unknown, req: HonoRequest) {
   const url = new URL(req.url)
 
@@ -38,7 +50,7 @@ export function logRequest(
     level,
     url: req.url,
     message,
-    headers: req.header
+    headers: getHeaders(req)
   })
 
   if (level === "error") {
